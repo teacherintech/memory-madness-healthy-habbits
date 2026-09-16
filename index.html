@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Memory Madness - Healthy Habits Edition (CoC Style)</title>
+  <style>
+    /* Google Fonts */
+    @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap');
+
+    :root {
+      --bg-color: #0f172a;
+      --card-bg: #1e293b;
+      --accent-gold: #f59e0b;
+      --accent-blue: #38bdf8;
+      --accent-green: #22c55e;
+      --accent-red: #ef4444;
+      --text-light: #f8fafc;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Montserrat', sans-serif;
+    }
+
+    body {
+      background-color: var(--bg-color);
+      color: var(--text-light);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      font-weight: 900;
+      color: var(--accent-gold);
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      text-shadow: 0 4px 10px rgba(245, 158, 11, 0.3);
+    }
+
+    p.subtitle {
+      color: var(--accent-blue);
+      font-weight: 700;
+      font-size: 1.1rem;
+    }
+
+    /* Controls & Timer Bar */
+    .dashboard {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+      max-width: 900px;
+      background: var(--card-bg);
+      padding: 15px 25px;
+      border-radius: 12px;
+      border: 2px solid var(--accent-blue);
+      margin-bottom: 20px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+    }
+
+    .timer-box {
+      font-size: 1.5rem;
+      font-weight: 700;
+    }
+
+    .timer-count {
+      color: var(--accent-gold);
+      font-size: 2rem;
+    }
+
+    .btn {
+      background: linear-gradient(135deg, #f59e0b, #d97706);
+      color: #fff;
+      border: none;
+      padding: 10px 20px;
+      font-size: 1rem;
+      font-weight: 700;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-transform: uppercase;
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(245, 158, 11, 0.4);
+    }
+
+    .btn-secondary {
+      background: linear-gradient(135deg, #38bdf8, #0284c7);
+    }
+
+    /* Main Container */
+    .main-container {
+      display: grid;
+      grid-template-columns: 1fr 350px;
+      gap: 20px;
+      width: 100%;
+      max-width: 1100px;
+    }
+
+    @media (max-width: 900px) {
+      .main-container {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* Grid Layout 4x4 */
+    .grid-board {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 15px;
+      perspective: 1000px;
+    }
+
+    /* Flip Card Styles */
+    .card {
+      background-color: transparent;
+      height: 120px;
+      cursor: pointer;
+    }
+
+    .card-inner {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      text-align: center;
+      transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+      transform-style: preserve-3d;
+    }
+
+    .card.flipped .card-inner {
+      transform: rotateY(180deg);
+    }
+
+    .card-front, .card-back {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      -webkit-backface-visibility: hidden;
+      backface-visibility: hidden;
+      border-radius: 12px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 10px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    }
+
+    /* Kartu Tertutup (Front/Depan) */
+    .card-front {
+      background: linear-gradient(135deg, #334155, #1e293b);
+      border: 2px solid #475569;
+    }
+
+    .card-number {
+      font-size: 2.5rem;
+      font-weight: 900;
+      color: var(--accent-gold);
+    }
+
+    /* Kartu Terbuka (Back/Belakang) */
+    .card-back {
+      background: linear-gradient(135deg, #0284c7, #0369a1);
+      color: white;
+      transform: rotateY(180deg);
+      border: 2px solid var(--accent-blue);
+    }
+
+    .card-icon {
+      font-size: 2rem;
+      margin-bottom: 5px;
+    }
+
+    .card-text {
+      font-size: 0.85rem;
+      font-weight: 700;
+      line-height: 1.2;
+    }
+
+    /* Panel Pertanyaan & Modul Guru */
+    .teacher-panel {
+      background: var(--card-bg);
+      border-radius: 12px;
+      padding: 20px;
+      border: 2px solid var(--accent-gold);
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    .panel-title {
+      font-size: 1.2rem;
+      color: var(--accent-gold);
+      border-bottom: 1px solid #334155;
+      padding-bottom: 8px;
+    }
+
+    .question-box {
+      background: #0f172a;
+      padding: 15px;
+      border-radius: 8px;
+      border-left: 4px solid var(--accent-blue);
+      min-height: 100px;
+    }
+
+    .question-text {
+      font-size: 1rem;
+      line-height: 1.4;
+    }
+
+    .answer-key {
+      margin-top: 10px;
+      font-size: 0.85rem;
+      color: var(--accent-green);
+      font-weight: 700;
+      display: none;
+    }
+
+    /* System Scoring UI */
+    .score-board {
+      background: #0f172a;
+      padding: 15px;
+      border-radius: 8px;
+    }
+
+    .score-row {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 8px;
+      font-size: 0.9rem;
+    }
+
+    .total-score {
+      font-size: 1.3rem;
+      font-weight: 900;
+      color: var(--accent-gold);
+      text-align: center;
+      margin-top: 10px;
+      border-top: 1px solid #334155;
+      padding-top: 8px;
+    }
+
+    /* Responsive text adjustments */
+    @media (max-width: 600px) {
+      .grid-board {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      .card {
+        height: 100px;
+      }
+      .card-number {
+        font-size: 1.8rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>MEMORY MADNESS</h1>
+    <p class="subtitle">Clash of Champions - Healthy Habits Edition</p>
+  </header>
+
+  <div class="dashboard">
+    <div class="timer-box">
+      Phase: <span id="phase-name" style="color: var(--accent-blue);">Ready</span> | 
+      Time: <span id="timer" class="timer-count">30</span>s
+    </div>
+    <div>
+      <button id="start-btn" class="btn">Start Memorize (30s)</button>
+      <button id="toggle-all-btn" class="btn btn-secondary" style="display: none;">Peek / Reveal All</button>
+    </div>
+  </div>
+
+  <div class="main-container">
+    <!-- Grid 4x4 -->
+    <div class="grid-board" id="grid-board">
+      <!-- Cards generated dynamically via JavaScript -->
+    </div>
+
+    <!-- Panel Kontrol Pertanyaan untuk Guru / Quizmaster -->
+    <div class="teacher-panel">
+      <h2 class="panel-title">Quizmaster Panel</h2>
+      
+      <div class="question-box">
+        <p class="question-text" id="question-display">Klik "Next Question" untuk memulainya tantangan Phase 2!</p>
+        <p class="answer-key" id="answer-display">Jawaban: -</p>
+      </div>
+
+      <div style="display: flex; gap: 10px;">
+        <button id="next-q-btn" class="btn btn-secondary" style="flex: 1;">Next Question</button>
+        <button id="show-ans-btn" class="btn" style="background: var(--accent-green); flex: 1;">Show Answer</button>
+      </div>
+
+      <div class="score-board">
+        <h3 style="margin-bottom: 10px; color: var(--accent-blue);">Scoring Guide (per Question)</h3>
+        <div class="score-row"><span>Correct Box Number:</span> <strong>+10 pts</strong></div>
+        <div class="score-row"><span>Good Pronunciation:</span> <strong>+5 pts</strong></div>
+        <div class="score-row"><span>Complete Sentence:</span> <strong>+10 pts</strong></div>
+        <div class="total-score">MAX: 25 PTS</div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Data 16 Everyday Healthy Habits
+    const habitsData = [
+      { id: 1, text: "Drink enough water", icon: "💧" },
+      { id: 2, text: "Eat fresh fruits", icon: "🍎" },
+      { id: 3, text: "Get 8 hours of sleep", icon: "😴" },
+      { id: 4, text: "Wash hands with soap", icon: "🧼" },
+      { id: 5, text: "Brush teeth twice a day", icon: "🪥" },
+      { id: 6, text: "Exercise regularly", icon: "🏃" },
+      { id: 7, text: "Take a bath daily", icon: "🚿" },
+      { id: 8, text: "Eat green vegetables", icon: "🥦" },
+      { id: 9, text: "Limit screen time", icon: "📱" },
+      { id: 10, text: "Clean your bedroom", icon: "🧹" },
+      { id: 11, text: "Stretch in the morning", icon: "🧘" },
+      { id: 12, text: "Sunbathe in the morning", icon: "☀️" },
+      { id: 13, text: "Avoid junk food", icon: "🍔" },
+      { id: 14, text: "Walk to nearby places", icon: "🚶" },
+      { id: 15, text: "Take a deep breath", icon: "🫁" },
+      { id: 16, text: "Keep a water bottle", icon: "🍼" }
+    ];
+
+    // Bank Soal Tantangan (Prompts)
+    const questions = [
+      {
+        prompt: 'Guru: "I feel very sleepy in class every morning. Which box has the solution?"',
+        answer: 'Box 3 (Get 8 hours of sleep)\nTarget: "You should get 8 hours of sleep every night."'
+      },
+      {
+        prompt: 'Guru: "My eyes hurt after playing games all day. Which box shows the correct habit?"',
+        answer: 'Box 9 (Limit screen time)\nTarget: "We must limit our screen time."'
+      },
+      {
+        prompt: 'Guru: "Before eating lunch, what habit must we do to stay clean?"',
+        answer: 'Box 4 (Wash hands with soap)\nTarget: "We need to wash our hands with soap."'
+      },
+      {
+        prompt: 'Guru: "Mention TWO box numbers that are related to FOOD or DRINK!"',
+        answer: 'Pilihan: Box 1, 2, 8, 13, atau 16.'
+      },
+      {
+        prompt: 'Guru: "Mention TWO box numbers related to PHYSICAL ACTIVITY!"',
+        answer: 'Pilihan: Box 6, 11, atau 14.'
+      },
+      {
+        prompt: 'Guru: "I am feeling stressed and nervous right now. Which box can help me calm down?"',
+        answer: 'Box 15 (Take a deep breath)\nTarget: "You should take a deep breath."'
+      }
+    ];
+
+    // Variables & Elements
+    let timerInterval = null;
+    let timeLeft = 30;
+    let currentQuestionIndex = 0;
+    let allFlipped = false;
+
+    const gridBoard = document.getElementById('grid-board');
+    const startBtn = document.getElementById('start-btn');
+    const toggleAllBtn = document.getElementById('toggle-all-btn');
+    const timerDisplay = document.getElementById('timer');
+    const phaseDisplay = document.getElementById('phase-name');
+    const questionDisplay = document.getElementById('question-display');
+    const answerDisplay = document.getElementById('answer-display');
+    const nextQBtn = document.getElementById('next-q-btn');
+    const showAnsBtn = document.getElementById('show-ans-btn');
+
+    // Generate 16 Cards into DOM
+    function initBoard() {
+      gridBoard.innerHTML = '';
+      habitsData.forEach((item) => {
+        const card = document.createElement('div');
+        card.classList.add('card');
+        card.dataset.id = item.id;
+
+        card.innerHTML = `
+          <div class="card-inner">
+            <div class="card-front">
+              <span class="card-number">${item.id}</span>
+            </div>
+            <div class="card-back">
+              <span class="card-icon">${item.icon}</span>
+              <span class="card-text">${item.text}</span>
+            </div>
+          </div>
+        `;
+
+        // Manual Flip Card On-Click
+        card.addEventListener('click', () => {
+          card.classList.toggle('flipped');
+        });
+
+        gridBoard.appendChild(card);
+      });
+    }
+
+    // Flip All Cards Function
+    function setAllCardsFlip(state) {
+      const cards = document.querySelectorAll('.card');
+      cards.forEach(card => {
+        if (state) {
+          card.classList.add('flipped');
+        } else {
+          card.classList.remove('flipped');
+        }
+      });
+      allFlipped = state;
+    }
+
+    // Start Phase 1: Memorization Timer (30 seconds)
+    function startMemorizePhase() {
+      clearInterval(timerInterval);
+      timeLeft = 30;
+      timerDisplay.textContent = timeLeft;
+      phaseDisplay.textContent = "Memorization";
+      phaseDisplay.style.color = "var(--accent-gold)";
+
+      // Open all cards for memorization
+      setAllCardsFlip(true);
+      startBtn.disabled = true;
+
+      timerInterval = setInterval(() => {
+        timeLeft--;
+        timerDisplay.textContent = timeLeft;
+
+        if (timeLeft <= 0) {
+          clearInterval(timerInterval);
+          // Auto close all cards when time is up
+          setAllCardsFlip(false);
+          phaseDisplay.textContent = "Recall / Quiz";
+          phaseDisplay.style.color = "var(--accent-green)";
+          startBtn.disabled = false;
+          toggleAllBtn.style.display = "inline-block";
+          alert("Time is UP! All cards are now hidden. Let's start the Quiz Phase!");
+        }
+      }, 1000);
+    }
+
+    // Toggle All Cards (Peek Button for Teacher)
+    toggleAllBtn.addEventListener('click', () => {
+      allFlipped = !allFlipped;
+      setAllCardsFlip(allFlipped);
+    });
+
+    // Display Next Question
+    function loadQuestion() {
+      if (questions.length === 0) return;
+      const q = questions[currentQuestionIndex];
+      questionDisplay.textContent = q.prompt;
+      answerDisplay.innerText = "Jawaban: " + q.answer;
+      answerDisplay.style.display = "none";
+    }
+
+    nextQBtn.addEventListener('click', () => {
+      currentQuestionIndex = (currentQuestionIndex + 1) % questions.length;
+      loadQuestion();
+    });
+
+    showAnsBtn.addEventListener('click', () => {
+      if (answerDisplay.style.display === "none") {
+        answerDisplay.style.display = "block";
+      } else {
+        answerDisplay.style.display = "none";
+      }
+    });
+
+    startBtn.addEventListener('click', startMemorizePhase);
+
+    // Initialize Game
+    initBoard();
+    loadQuestion();
+  </script>
+</body>
+</html>
