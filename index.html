@@ -180,10 +180,14 @@
       border: 2px solid var(--accent-blue);
     }
 
-    .card-icon {
-      font-size: 2rem;
-      margin-bottom: 5px;
-    }
+    .card-img {
+  width: 50px;
+  height: 50px;
+  object-fit: cover;
+  border-radius: 8px;
+  margin-bottom: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
 
     .card-text {
       font-size: 0.85rem;
@@ -319,23 +323,23 @@
   <script>
     // Data 16 Everyday Healthy Habits
     const habitsData = [
-      { id: 1, text: "Drink enough water", icon: "💧" },
-      { id: 2, text: "Eat fresh fruits", icon: "🍎" },
-      { id: 3, text: "Get 8 hours of sleep", icon: "😴" },
-      { id: 4, text: "Wash hands with soap", icon: "🧼" },
-      { id: 5, text: "Brush teeth twice a day", icon: "🪥" },
-      { id: 6, text: "Exercise regularly", icon: "🏃" },
-      { id: 7, text: "Take a bath daily", icon: "🚿" },
-      { id: 8, text: "Eat green vegetables", icon: "🥦" },
-      { id: 9, text: "Limit screen time", icon: "📱" },
-      { id: 10, text: "Clean your bedroom", icon: "🧹" },
-      { id: 11, text: "Stretch in the morning", icon: "🧘" },
-      { id: 12, text: "Sunbathe in the morning", icon: "☀️" },
-      { id: 13, text: "Avoid junk food", icon: "🍔" },
-      { id: 14, text: "Walk to nearby places", icon: "🚶" },
-      { id: 15, text: "Take a deep breath", icon: "🫁" },
-      { id: 16, text: "Keep a water bottle", icon: "🍼" }
-    ];
+     { id: 1, text: "Drink enough water", img: "https://images.unsplash.com/photo-1548839140-29a749e1bc4e?w=150&auto=format&fit=crop" },
+  { id: 2, text: "Eat fresh fruits", img: "https://images.unsplash.com/photo-1619566636858-adf3ef46400b?w=150&auto=format&fit=crop" },
+  { id: 3, text: "Get 8 hours of sleep", img: "https://images.unsplash.com/photo-1541781774459-bb2af2f05b55?w=150&auto=format&fit=crop" },
+  { id: 4, text: "Wash hands with soap", img: "https://images.unsplash.com/photo-1584515979956-d9f6e5d09982?w=150&auto=format&fit=crop" },
+  { id: 5, text: "Brush teeth twice a day", img: "https://images.unsplash.com/photo-1559591937-e58af10079d3?w=150&auto=format&fit=crop" },
+  { id: 6, text: "Exercise regularly", img: "https://images.unsplash.com/photo-1517838277536-f5f99be501cd?w=150&auto=format&fit=crop" },
+  { id: 7, text: "Take a bath daily", img: "https://images.unsplash.com/photo-1584622650111-993a426fbf0a?w=150&auto=format&fit=crop" },
+  { id: 8, text: "Eat green vegetables", img: "https://images.unsplash.com/photo-1540420773420-3366772f4999?w=150&auto=format&fit=crop" },
+  { id: 9, text: "Limit screen time", img: "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=150&auto=format&fit=crop" },
+  { id: 10, text: "Clean your bedroom", img: "https://images.unsplash.com/photo-1588854337236-6889d631faa8?w=150&auto=format&fit=crop" },
+  { id: 11, text: "Stretch in the morning", img: "https://images.unsplash.com/photo-1518611012118-696072aa579a?w=150&auto=format&fit=crop" },
+  { id: 12, text: "Sunbathe in the morning", img: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=150&auto=format&fit=crop" },
+  { id: 13, text: "Avoid junk food", img: "https://images.unsplash.com/photo-1561758033-d89a9ad46330?w=150&auto=format&fit=crop" },
+  { id: 14, text: "Walk to nearby places", img: "https://images.unsplash.com/photo-1476480862126-209bfaa8edc8?w=150&auto=format&fit=crop" },
+  { id: 15, text: "Take a deep breath", img: "https://images.unsplash.com/photo-1506126613408-eca07ce68773?w=150&auto=format&fit=crop" },
+  { id: 16, text: "Keep a water bottle", img: "https://images.unsplash.com/photo-1602143407151-7111542de6e8?w=150&auto=format&fit=crop" }
+];
 
     // Bank Soal Tantangan (Prompts)
     const questions = [
@@ -389,17 +393,17 @@
         card.classList.add('card');
         card.dataset.id = item.id;
 
-        card.innerHTML = `
-          <div class="card-inner">
-            <div class="card-front">
-              <span class="card-number">${item.id}</span>
-            </div>
-            <div class="card-back">
-              <span class="card-icon">${item.icon}</span>
-              <span class="card-text">${item.text}</span>
-            </div>
-          </div>
-        `;
+       card.innerHTML = `
+  <div class="card-inner">
+    <div class="card-front">
+      <span class="card-number">${item.id}</span>
+    </div>
+    <div class="card-back">
+      <img src="${item.img}" alt="${item.text}" class="card-img">
+      <span class="card-text">${item.text}</span>
+    </div>
+  </div>
+`;
 
         // Manual Flip Card On-Click
         card.addEventListener('click', () => {
